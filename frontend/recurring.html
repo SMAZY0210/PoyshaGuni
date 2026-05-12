@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="theme-color" content="#6366f1">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+    <title>Recurring - FinTrack</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/svg+xml" sizes="32x32" href="favicon32.svg">
+    <link rel="shortcut icon" href="favicon.svg">
+    <link rel="stylesheet" href="style/main.css">
+    <script src="js/theme.js"></script>
+</head>
+<body class="app-body">
+
+<header class="app-navbar">
+  <div class="app-logo">FinTrack</div>
+  <nav class="app-nav desktop-only">
+    <a href="dashboard.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg> Dashboard</a>
+    <a href="transactions.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6l4-4 4 4"/><path d="M12 2v10"/><path d="M16 18l-4 4-4-4"/><path d="M12 22V12"/></svg> Transactions</a>
+    <a href="budgets.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg> Budgets</a>
+    <a href="goals.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg> Goals</a>
+    <a href="recurring.html" class="active"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg> Recurring</a>
+    <a href="analytics.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg> Analytics</a>
+  </nav>
+  <div class="app-user">
+    <a href="profile.html" class="profile-nav-link">
+      <span class="nav-avatar" id="navAvatar">?</span>
+      <span class="user-name desktop-only">User</span>
+    </a>
+    <a href="settings.html" class="settings-link desktop-only" title="Settings" aria-label="Settings"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></a>
+    <button id="logoutBtn" class="btn-logout desktop-only"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> Logout</button>
+  </div>
+</header>
+
+<main class="app-main">
+    <div class="page-header">
+        <div>
+            <h2>Recurring</h2>
+            <p>Automate repeating transactions</p>
+        </div>
+        <div class="page-header-actions">
+            <button id="processAllBtn" class="btn-secondary"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg> Process Due</button>
+            <button id="addRecBtn" class="btn-primary"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Add</button>
+        </div>
+    </div>
+
+    <div class="stats-grid" style="grid-template-columns: repeat(4,1fr); margin-bottom:28px;">
+        <div class="stat-card expense">
+            <div class="stat-label">Monthly Expenses</div>
+            <div class="stat-value" id="recExpenseTotal">$0.00</div>
+            <div class="stat-sub">Estimated / month</div>
+        </div>
+        <div class="stat-card income">
+            <div class="stat-label">Monthly Income</div>
+            <div class="stat-value" id="recIncomeTotal">$0.00</div>
+            <div class="stat-sub">Estimated / month</div>
+        </div>
+        <div class="stat-card balance">
+            <div class="stat-label">Net Monthly</div>
+            <div class="stat-value" id="recNetTotal">$0.00</div>
+            <div class="stat-sub">Income − Expenses</div>
+        </div>
+        <div class="stat-card monthly">
+            <div class="stat-label">Active Rules</div>
+            <div class="stat-value" id="recCount">0</div>
+            <div class="stat-sub">Recurring entries</div>
+        </div>
+    </div>
+
+    <div class="rec-layout">
+        <div class="rec-main">
+            <div class="rec-filter-bar">
+                <button class="rec-filter-btn active" data-filter="all">All</button>
+                <button class="rec-filter-btn" data-filter="active">Active</button>
+                <button class="rec-filter-btn" data-filter="paused">Paused</button>
+                <button class="rec-filter-btn" data-filter="expense">Expenses</button>
+                <button class="rec-filter-btn" data-filter="income">Income</button>
+            </div>
+            <div id="recurringList" class="rec-list">
+                <p class="loading-text">Loading...</p>
+            </div>
+        </div>
+
+        <div class="rec-sidebar">
+            <div class="upcoming-card">
+                <h3>📅 Due in Next 30 Days</h3>
+                <div id="upcomingList"><p class="no-data">Loading...</p></div>
+            </div>
+            <div class="how-it-works">
+                <h4>How it works</h4>
+                <ol>
+                    <li>Create a rule with a frequency</li>
+                    <li>Click <strong><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg> Process Due</strong> when due</li>
+                    <li>Pause or delete rules anytime</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Mobile FAB -->
+<button class="mobile-add-fab" id="mobileAddRecBtn" aria-label="Add recurring"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+
+<nav class="mobile-bottom-nav">
+  <a href="dashboard.html" class="mobile-nav-item"><span class="mobile-nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></span><span class="mobile-nav-label">Home</span></a>
+  <a href="transactions.html" class="mobile-nav-item"><span class="mobile-nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6l4-4 4 4"/><path d="M12 2v10"/><path d="M16 18l-4 4-4-4"/><path d="M12 22V12"/></svg></span><span class="mobile-nav-label">Txns</span></a>
+  <a href="budgets.html" class="mobile-nav-item"><span class="mobile-nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></span><span class="mobile-nav-label">Budgets</span></a>
+  <a href="analytics.html" class="mobile-nav-item"><span class="mobile-nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span><span class="mobile-nav-label">Analytics</span></a>
+  <a href="profile.html" class="mobile-nav-item"><span class="mobile-nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></span><span class="mobile-nav-label">Profile</span></a>
+</nav>
+
+<!-- ADD/EDIT MODAL -->
+<div id="recModal" class="modal-overlay">
+    <div class="modal-card" style="width:480px;">
+        <div class="modal-header">
+            <h3 id="recModalTitle">Add Recurring Transaction</h3>
+            <button id="closeRecModal" class="modal-close"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+        </div>
+        <form id="recurringForm">
+            <div class="form-row">
+                <label class="form-label">Type</label>
+                <select id="recTypeField">
+                    <option value="expense">Expense</option>
+                    <option value="income">Income</option>
+                </select>
+            </div>
+            <div id="recExpenseFields">
+                <div class="form-row">
+                    <label class="form-label">Title</label>
+                    <input type="text" id="recTitleField" placeholder="e.g. Netflix, Rent">
+                </div>
+                <div class="form-row">
+                    <label class="form-label">Category</label>
+                    <select id="recCategoryField"></select>
+                </div>
+            </div>
+            <div id="recIncomeFields" style="display:none">
+                <div class="form-row">
+                    <label class="form-label">Source</label>
+                    <input type="text" id="recSourceField" placeholder="e.g. Salary, Freelance">
+                </div>
+            </div>
+            <div class="form-row">
+                <label class="form-label">Amount ($)</label>
+                <input type="number" id="recAmountField" placeholder="0.00" min="0.01" step="0.01" required>
+            </div>
+            <div class="form-row">
+                <label class="form-label">Frequency</label>
+                <select id="recFreqField">
+                    <option value="daily">Daily</option>
+                    <option value="weekly">Weekly</option>
+                    <option value="monthly" selected>Monthly</option>
+                    <option value="yearly">Yearly</option>
+                </select>
+            </div>
+            <div class="form-row two-col">
+                <div>
+                    <label class="form-label">Start Date</label>
+                    <input type="date" id="recStartDate" required>
+                </div>
+                <div>
+                    <label class="form-label">End Date <span style="color:#9ca3af">(optional)</span></label>
+                    <input type="date" id="recEndDate">
+                </div>
+            </div>
+            <div class="form-row">
+                <label class="form-label">Note <span style="color:#9ca3af">(optional)</span></label>
+                <input type="text" id="recNoteField" placeholder="e.g. Shared with roommate">
+            </div>
+            <div class="modal-actions">
+                <button type="button" id="cancelRecBtn" class="btn-secondary">Cancel</button>
+                <button type="submit" class="btn-primary">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="js/icons.js"></script>
+<script src="js/api.js"></script>
+<script src="js/recurring.js"></script>
+<script>
+    document.getElementById('mobileAddRecBtn')?.addEventListener('click', () => openAddModal());
+</script>
+</body>
+</html>

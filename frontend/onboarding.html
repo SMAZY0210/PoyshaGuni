@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#6366f1">
+    <title>Welcome - FinTrack</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/svg+xml" sizes="32x32" href="favicon32.svg">
+    <link rel="shortcut icon" href="favicon.svg">
+    <link rel="stylesheet" href="style/main.css">
+    <link rel="stylesheet" href="style/onboarding.css">
+    <link rel="stylesheet" href="style/onboarding.css">
+    <script src="js/theme.js"></script>
+</head>
+<body class="ob-body">
+<div class="ob-container">
+
+    <!-- Progress bar -->
+    <div class="ob-progress-bar"><div class="ob-progress-fill" id="progressFill"></div></div>
+    <p class="ob-step-label" id="stepLabel">Step 1 of 3</p>
+
+    <!-- Step 1: Currency -->
+    <div class="ob-step active" id="step1">
+        <div class="ob-icon"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+        <h2 class="ob-title">Choose your currency</h2>
+        <p class="ob-subtitle">All amounts will be displayed in your preferred currency.</p>
+        <select id="currencySelect" class="ob-select">
+            <option value="USD" data-symbol="$"  data-locale="en-US"  selected>🇺🇸 US Dollar (USD) $</option>
+            <option value="EUR" data-symbol="€"  data-locale="de-DE">🇪🇺 Euro (EUR) €</option>
+            <option value="GBP" data-symbol="£"  data-locale="en-GB">🇬🇧 British Pound (GBP) £</option>
+            <option value="BDT" data-symbol="৳"  data-locale="bn-BD">🇧🇩 Bangladeshi Taka (BDT) ৳</option>
+            <option value="INR" data-symbol="₹"  data-locale="en-IN">🇮🇳 Indian Rupee (INR) ₹</option>
+            <option value="JPY" data-symbol="¥"  data-locale="ja-JP">🇯🇵 Japanese Yen (JPY) ¥</option>
+            <option value="CAD" data-symbol="CA$" data-locale="en-CA">🇨🇦 Canadian Dollar (CAD) CA$</option>
+            <option value="AUD" data-symbol="A$"  data-locale="en-AU">🇦🇺 Australian Dollar (AUD) A$</option>
+            <option value="CHF" data-symbol="Fr"  data-locale="de-CH">🇨🇭 Swiss Franc (CHF) Fr</option>
+            <option value="CNY" data-symbol="¥"   data-locale="zh-CN">🇨🇳 Chinese Yuan (CNY) ¥</option>
+            <option value="KRW" data-symbol="₩"   data-locale="ko-KR">🇰🇷 South Korean Won (KRW) ₩</option>
+            <option value="SGD" data-symbol="S$"  data-locale="en-SG">🇸🇬 Singapore Dollar (SGD) S$</option>
+            <option value="AED" data-symbol="د.إ" data-locale="ar-AE">🇦🇪 UAE Dirham (AED) د.إ</option>
+            <option value="SAR" data-symbol="﷼"   data-locale="ar-SA">🇸🇦 Saudi Riyal (SAR) ﷼</option>
+            <option value="MYR" data-symbol="RM"  data-locale="ms-MY">🇲🇾 Malaysian Ringgit (MYR) RM</option>
+            <option value="IDR" data-symbol="Rp"  data-locale="id-ID">🇮🇩 Indonesian Rupiah (IDR) Rp</option>
+            <option value="PKR" data-symbol="₨"   data-locale="ur-PK">🇵🇰 Pakistani Rupee (PKR) ₨</option>
+            <option value="BRL" data-symbol="R$"  data-locale="pt-BR">🇧🇷 Brazilian Real (BRL) R$</option>
+            <option value="MXN" data-symbol="$"   data-locale="es-MX">🇲🇽 Mexican Peso (MXN) $</option>
+            <option value="ZAR" data-symbol="R"   data-locale="en-ZA">🇿🇦 South African Rand (ZAR) R</option>
+            <option value="NGN" data-symbol="₦"   data-locale="en-NG">🇳🇬 Nigerian Naira (NGN) ₦</option>
+            <option value="TRY" data-symbol="₺"   data-locale="tr-TR">🇹🇷 Turkish Lira (TRY) ₺</option>
+            <option value="RUB" data-symbol="₽"   data-locale="ru-RU">🇷🇺 Russian Ruble (RUB) ₽</option>
+            <option value="SEK" data-symbol="kr"  data-locale="sv-SE">🇸🇪 Swedish Krona (SEK) kr</option>
+            <option value="NOK" data-symbol="kr"  data-locale="nb-NO">🇳🇴 Norwegian Krone (NOK) kr</option>
+        </select>
+    </div>
+
+    <!-- Step 2: First income -->
+    <div class="ob-step" id="step2">
+        <div class="ob-icon"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div>
+        <h2 class="ob-title">Add your first income</h2>
+        <p class="ob-subtitle">What's your main source of income? You can skip this and add it later.</p>
+        <div class="ob-form">
+            <input type="text" id="firstIncomeSource" class="ob-input" placeholder="e.g. Monthly Salary, Freelance">
+            <input type="number" id="firstIncomeAmount" class="ob-input" placeholder="Amount" min="0.01" step="0.01">
+        </div>
+    </div>
+
+    <!-- Step 3: Set first budget -->
+    <div class="ob-step" id="step3">
+        <div class="ob-icon"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div>
+        <h2 class="ob-title">You're all set!</h2>
+        <p class="ob-subtitle">Your FinTrack account is ready. Head to your dashboard to start tracking, or explore budgets and goals.</p>
+        <div class="ob-checklist">
+            <div class="ob-check"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Account created</div>
+            <div class="ob-check"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Currency selected</div>
+            <div class="ob-check"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Ready to track</div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="ob-nav">
+        <button id="backBtn" class="btn-secondary" style="display:none"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg> Back</button>
+        <button id="skipBtn" class="ob-skip-btn">Skip setup</button>
+        <button id="nextBtn" class="btn-primary"Next <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+    </div>
+
+</div>
+<script src="js/icons.js"></script>
+<script src="js/api.js"></script>
+<script src="js/onboarding.js"></script>
+</body>
+</html>

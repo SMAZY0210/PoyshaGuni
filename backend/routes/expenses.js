@@ -1,0 +1,10 @@
+const express = require('express');
+const router = express.Router();
+const { getExpenses, addExpense, updateExpense, deleteExpense, exportExpensesCSV } = require('../controllers/expenseController');
+const { protect } = require('../middleware/auth');
+const { validateExpense } = require('../middleware/validate');
+router.use(protect);
+router.get('/export', exportExpensesCSV);
+router.route('/').get(getExpenses).post(validateExpense, addExpense);
+router.route('/:id').put(updateExpense).delete(deleteExpense);
+module.exports = router;

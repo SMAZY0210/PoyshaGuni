@@ -1,0 +1,10 @@
+const express = require('express');
+const router = express.Router();
+const { getIncome, addIncome, updateIncome, deleteIncome, exportIncomeCSV } = require('../controllers/incomeController');
+const { protect } = require('../middleware/auth');
+const { validateIncome } = require('../middleware/validate');
+router.use(protect);
+router.get('/export', exportIncomeCSV);
+router.route('/').get(getIncome).post(validateIncome, addIncome);
+router.route('/:id').put(updateIncome).delete(deleteIncome);
+module.exports = router;

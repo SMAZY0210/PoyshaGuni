@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#6366f1">
+    <link rel="manifest" href="manifest.json">
+    <title>Analytics - FinTrack</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/svg+xml" sizes="32x32" href="favicon32.svg">
+    <link rel="shortcut icon" href="favicon.svg">
+    <link rel="stylesheet" href="style/main.css">
+    <link rel="stylesheet" href="style/analytics.css">
+    <link rel="stylesheet" href="style/analytics.css">
+    <script src="js/theme.js"></script>
+</head>
+<body class="app-body">
+
+<!-- NAVBAR -->
+<header class="app-navbar">
+  <div class="app-logo">FinTrack</div>
+  <nav class="app-nav desktop-only">
+    <a href="dashboard.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg> Dashboard</a>
+    <a href="transactions.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6l4-4 4 4"/><path d="M12 2v10"/><path d="M16 18l-4 4-4-4"/><path d="M12 22V12"/></svg> Transactions</a>
+    <a href="budgets.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg> Budgets</a>
+    <a href="goals.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg> Goals</a>
+    <a href="recurring.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg> Recurring</a>
+    <a href="analytics.html" class="active"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg> Analytics</a>
+  </nav>
+  <div class="app-user">
+    <a href="profile.html" class="profile-nav-link">
+      <span class="nav-avatar" id="navAvatar">?</span>
+      <span class="user-name desktop-only">User</span>
+    </a>
+    <a href="settings.html" class="settings-link desktop-only" title="Settings" aria-label="Settings"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></a>
+    <button id="logoutBtn" class="btn-logout desktop-only"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> Logout</button>
+  </div>
+</header>
+
+<main class="app-main an-main">
+
+    <!-- Month picker -->
+    <div class="an-topbar">
+        <div class="an-title-group">
+            <h2 class="an-page-title">Finance Analytics</h2>
+            <p class="an-page-sub">Deep insights into your financial health</p>
+        </div>
+        <div class="month-nav">
+            <button id="prevMonth" class="month-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+            <span id="monthLabel" class="month-label"></span>
+            <button id="nextMonth" class="month-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         ROW 1 — 6 stat cards
+    ═══════════════════════════════════════════ -->
+    <div class="an-stat-grid">
+
+        <div class="an-card an-stat net-worth">
+            <div class="an-stat-label">Net Worth</div>
+            <div class="an-stat-value" id="anNetWorth">—</div>
+            <div class="an-stat-sub">All-time balance</div>
+        </div>
+
+        <div class="an-card an-stat savings-rate">
+            <div class="an-stat-label">Savings Rate</div>
+            <div class="an-stat-value" id="anSavingsRate">—</div>
+            <div class="an-stat-sub">This month</div>
+            <div class="an-mini-track"><div class="an-mini-fill" id="savingsGauge"></div></div>
+        </div>
+
+        <div class="an-card an-stat">
+            <div class="an-stat-label">Avg Daily Spend</div>
+            <div class="an-stat-value" id="anAvgDaily">—</div>
+            <div class="an-stat-sub">So far this month</div>
+        </div>
+
+        <div class="an-card an-stat">
+            <div class="an-stat-label">Projected Month-End</div>
+            <div class="an-stat-value" id="anProjected">—</div>
+            <div class="an-stat-sub">At current pace</div>
+            <div class="an-mini-track"><div class="an-mini-fill" id="projectedBar"></div></div>
+        </div>
+
+        <div class="an-card an-stat">
+            <div class="an-stat-label">Income</div>
+            <div class="an-stat-value income-color" id="anCurIncome">—</div>
+            <div class="an-stat-sub">This month</div>
+        </div>
+
+        <div class="an-card an-stat">
+            <div class="an-stat-label">Expenses</div>
+            <div class="an-stat-value expense-color" id="anCurExpenses">—</div>
+            <div class="an-stat-sub">This month</div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         ROW 2 — Insights
+    ═══════════════════════════════════════════ -->
+    <div class="an-card an-insights-card">
+        <div class="an-card-header">
+            <h3>Smart Insights</h3>
+            <span class="an-card-sub">Auto-generated from your data</span>
+        </div>
+        <div id="insightsList" class="insights-list"></div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         ROW 3 — 12-month income vs expenses
+    ═══════════════════════════════════════════ -->
+    <div class="an-card an-chart-card wide">
+        <div class="an-card-header">
+            <h3>Income vs Expenses vs Savings</h3>
+            <span class="an-card-sub">Last 12 months</span>
+        </div>
+        <div class="an-chart-wrap" style="height:280px">
+            <canvas id="incExpChart"></canvas>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         ROW 4 — Savings rate + Category donut
+    ═══════════════════════════════════════════ -->
+    <div class="an-two-col">
+        <div class="an-card an-chart-card">
+            <div class="an-card-header">
+                <h3>Savings Rate Trend</h3>
+                <span class="an-card-sub">With 20% target line</span>
+            </div>
+            <div class="an-chart-wrap" style="height:220px">
+                <canvas id="savingsRateChart"></canvas>
+            </div>
+        </div>
+        <div class="an-card an-chart-card">
+            <div class="an-card-header">
+                <h3>Spending by Category</h3>
+                <span class="an-card-sub">This month</span>
+            </div>
+            <div class="an-chart-wrap" style="height:220px">
+                <canvas id="catDonutChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         ROW 5 — Year-over-year
+    ═══════════════════════════════════════════ -->
+    <div class="an-card an-yoy-card">
+        <div class="an-card-header">
+            <h3>Year-over-Year Comparison</h3>
+            <span class="an-card-sub">This month vs same month last year</span>
+        </div>
+        <div class="yoy-grid">
+            <div class="yoy-col header-col">
+                <div class="yoy-cell header">Budgeting</div>
+                <div class="yoy-cell label">Expenses</div>
+                <div class="yoy-cell label">Income</div>
+                <div class="yoy-cell label">Savings</div>
+            </div>
+            <div class="yoy-col">
+                <div class="yoy-cell header">This Year</div>
+                <div class="yoy-cell expense-color" id="yoyExpThis">—</div>
+                <div class="yoy-cell income-color"  id="yoyIncThis">—</div>
+                <div class="yoy-cell"               id="yoySavThis">—</div>
+            </div>
+            <div class="yoy-col">
+                <div class="yoy-cell header">Last Year</div>
+                <div class="yoy-cell" id="yoyExpLast">—</div>
+                <div class="yoy-cell" id="yoyIncLast">—</div>
+                <div class="yoy-cell" id="yoySavLast">—</div>
+            </div>
+            <div class="yoy-col">
+                <div class="yoy-cell header">Change</div>
+                <div class="yoy-cell" id="yoyExpDiff">—</div>
+                <div class="yoy-cell" id="yoyIncDiff">—</div>
+                <div class="yoy-cell" id="yoySavDiff">—</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         ROW 6 — Category trends stacked area
+    ═══════════════════════════════════════════ -->
+    <div class="an-card an-chart-card wide">
+        <div class="an-card-header">
+            <h3>Spending Trends by Category</h3>
+            <span class="an-card-sub">Last 12 months — see which categories are growing</span>
+        </div>
+        <div class="an-chart-wrap" style="height:260px">
+            <canvas id="catTrendChart"></canvas>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         ROW 7 — Daily spending + Top expenses
+    ═══════════════════════════════════════════ -->
+    <div class="an-two-col">
+        <div class="an-card an-chart-card">
+            <div class="an-card-header">
+                <h3>Daily Spending</h3>
+                <span class="an-card-sub">Red = above daily average</span>
+            </div>
+            <div class="an-chart-wrap" style="height:220px">
+                <canvas id="dailyChart"></canvas>
+            </div>
+        </div>
+        <div class="an-card">
+            <div class="an-card-header">
+                <h3>Top 5 Expenses</h3>
+                <span class="an-card-sub">Biggest transactions this month</span>
+            </div>
+            <table class="top-table">
+                <thead>
+                    <tr><th>#</th><th>Title</th><th>Category</th><th>Amount</th></tr>
+                </thead>
+                <tbody id="topExpensesBody">
+                    <tr><td colspan="4" class="loading-text">Loading...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         ROW 8 — Income sources + Heatmap
+    ═══════════════════════════════════════════ -->
+    <div class="an-two-col">
+        <div class="an-card an-chart-card">
+            <div class="an-card-header">
+                <h3>Income Sources</h3>
+                <span class="an-card-sub">This month</span>
+            </div>
+            <div class="an-chart-wrap" style="height:220px">
+                <canvas id="incomeSourcesChart"></canvas>
+            </div>
+        </div>
+        <div class="an-card">
+            <div class="an-card-header">
+                <h3>Spending Heatmap</h3>
+                <span class="an-card-sub">Category × month (darker = more)</span>
+            </div>
+            <div id="heatmapGrid" class="heatmap-wrap"></div>
+        </div>
+    </div>
+
+</main>
+
+<!-- MOBILE BOTTOM NAV -->
+<nav class="mobile-bottom-nav">
+  <a href="dashboard.html" class="mobile-nav-item"><span class="mobile-nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></span><span class="mobile-nav-label">Home</span></a>
+  <a href="transactions.html" class="mobile-nav-item"><span class="mobile-nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6l4-4 4 4"/><path d="M12 2v10"/><path d="M16 18l-4 4-4-4"/><path d="M12 22V12"/></svg></span><span class="mobile-nav-label">Txns</span></a>
+  <a href="budgets.html" class="mobile-nav-item"><span class="mobile-nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></span><span class="mobile-nav-label">Budgets</span></a>
+  <a href="analytics.html" class="mobile-nav-item active"><span class="mobile-nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span><span class="mobile-nav-label">Analytics</span></a>
+  <a href="profile.html" class="mobile-nav-item"><span class="mobile-nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></span><span class="mobile-nav-label">Profile</span></a>
+</nav>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="js/icons.js"></script>
+<script src="js/api.js"></script>
+<script src="js/analytics.js"></script>
+</body>
+</html>
