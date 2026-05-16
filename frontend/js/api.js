@@ -1,7 +1,7 @@
 // ── FinTrack API Configuration ─────────────────────────────────────
 const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
     ? 'http://localhost:5000/api'
-    : 'fintrack-backend-git-main-smazy-0210-s-projects.vercel.app/api';
+    : 'https://fintrack-backend-jet.vercel.app/api';
 
 const getToken  = () => localStorage.getItem('fintrack_token');
 const getUser   = () => JSON.parse(localStorage.getItem('fintrack_user') || 'null');
