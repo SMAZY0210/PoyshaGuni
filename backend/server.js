@@ -51,6 +51,10 @@ app.use(errorHandler);
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
     console.log(`FinTrack server running on port ${PORT}`);
-    startAllCrons();
+    // Only start crons in local development, not on Vercel
+    if (process.env.NODE_ENV !== 'production') {
+        startAllCrons();
+    }
 });
+
 module.exports = app;
