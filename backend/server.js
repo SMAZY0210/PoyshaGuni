@@ -16,13 +16,7 @@ const app = express();
 app.use(helmet({ crossOriginResourcePolicy: false }));
 app.use(mongoSanitize());
 app.use(cors({
-    origin: function (origin, callback) {
-        if (!origin) return callback(null, true);
-        if (origin.includes('localhost') || origin.includes('127.0.0.1') || origin.endsWith('.vercel.app')) {
-            return callback(null, true);
-        }
-        callback(new Error('Not allowed by CORS'));
-    },
+    origin: true,
     credentials: true
 }));
 app.use(express.json({ limit: '5mb' }));  // allow avatar uploads
