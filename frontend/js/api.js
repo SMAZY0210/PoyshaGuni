@@ -1,5 +1,5 @@
 // ── PoyshaGuni API Configuration ─────────────────────────────────────
-const API_BASE = 'https://poyshaguni-backend-jet.vercel.app/api';
+const API_BASE = 'poyshaguniapi.smazy0210.tech/api';
 
 // ── Auth Helpers ───────────────────────────────────────────────────
 const getToken = () => localStorage.getItem('poyshaguni_token');
