@@ -1258,6 +1258,66 @@ footer p { color: var(--text-3); font-size: 13px; }
 }
 .mobile-add-fab:active { transform: scale(0.9); }
 
+
+/* ── Public Navbar Mobile Hamburger ─────────────────────────────── */
+.nav-hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: var(--r-sm);
+  transition: var(--t-fast);
+  z-index: 1001;
+}
+.nav-hamburger span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: var(--text);
+  border-radius: 2px;
+  transition: var(--t-base);
+}
+.nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.nav-hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+.nav-mobile-menu {
+  display: none;
+  position: fixed;
+  top: 64px; left: 0; right: 0;
+  background: var(--bg-2);
+  border-bottom: 1px solid var(--border);
+  padding: 16px 24px 24px;
+  z-index: 1000;
+  flex-direction: column;
+  gap: 4px;
+  animation: slideDown 0.2s ease;
+}
+@keyframes slideDown { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+.nav-mobile-menu.open { display: flex; }
+.nav-mobile-menu a {
+  display: block;
+  padding: 12px 16px;
+  color: var(--text-2);
+  font-size: 15px;
+  font-weight: 500;
+  border-radius: var(--r-md);
+  text-decoration: none;
+  transition: var(--t-fast);
+}
+.nav-mobile-menu a:hover { background: var(--surface); color: var(--text); }
+.nav-mobile-menu .mobile-menu-divider { height: 1px; background: var(--border); margin: 8px 0; }
+.nav-mobile-menu .btn-primary {
+  background: var(--emerald);
+  color: #0a0f1e !important;
+  font-weight: 700;
+  text-align: center;
+  margin-top: 4px;
+}
+
 .mobile-only  { display: none !important; }
 .desktop-only { display: flex !important; }
 
@@ -1273,6 +1333,12 @@ footer p { color: var(--text-3); font-size: 13px; }
   .theme-fab { bottom: calc(68px + env(safe-area-inset-bottom,0px)); right: 14px; }
   .mobile-add-fab { bottom: calc(76px + env(safe-area-inset-bottom,0px)); right: 68px; }
   .app-navbar { padding: 0 16px; height: 54px; }
+  .app-user { gap: 4px; }
+  .profile-nav-link { padding: 2px; border: none; background: none !important; }
+  .profile-nav-link:hover { background: none !important; }
+  .user-name { display: none !important; }
+  .nav-avatar { width: 28px; height: 28px; font-size: 10px; }
+  .app-logo { font-size: 16px; }
   .app-main { padding: 16px 16px 24px; }
   .stats-grid { grid-template-columns: 1fr 1fr !important; gap: 10px; }
   .stat-value { font-size: 20px; }
@@ -1300,7 +1366,25 @@ footer p { color: var(--text-3); font-size: 13px; }
   .hero { grid-template-columns: 1fr; padding: 60px 24px 48px; min-height: auto; }
   .hero-visual { display: none; }
   .hero-text h1 { font-size: 36px; }
-  .navbar { padding: 0 24px; }
+  .navbar { padding: 0 20px; height: 56px; }
+  .navbar nav { display: none; }
+  .nav-hamburger { display: flex; }
+  .feature-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+  .hero-text h1 { font-size: 32px; }
+  .hero-text p { font-size: 15px; }
+  .hero-buttons { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .section-title { font-size: 26px; }
+  .features, .download { padding: 48px 20px; }
+  .download h2 { font-size: 24px; }
+  .store-buttons { flex-direction: column; align-items: center; gap: 10px; }
+  .pricing-grid { grid-template-columns: 1fr; max-width: 380px; margin: 0 auto; }
+  .about-section .section-container { padding: 0; }
+  .team-grid { grid-template-columns: 1fr 1fr; gap: 16px; }
+  .features-detailed { padding: 48px 20px; }
+  .feature-row { flex-direction: column; gap: 24px; }
+  .feature-row.reverse { flex-direction: column; }
+  .analytics-grid { grid-template-columns: 1fr; }
+  .nav-mobile-menu { top: 56px; }
   .features, .download, .pricing, .about-section, .team, .features-detailed { padding: 56px 24px; }
   .feature-grid, .pricing-grid { grid-template-columns: 1fr; }
   .feature-row, .feature-row.reverse { flex-direction: column; }
