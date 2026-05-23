@@ -96,8 +96,6 @@ PoyshaGuni/
 │   │   └── cron.js                # Scheduled jobs
 │   ├── server.js                  # App entry point
 │   ├── package.json
-│   ├── .env                       # Your local config (not committed)
-│   └── .env.example               # Template for .env
 └── frontend/
     ├── index.html                 # Landing page
     ├── login.html / signup.html
