@@ -61,42 +61,6 @@ The name comes from the Bengali word *poysha* (money), and the app supports mult
 - Chart.js for charts
 - A service worker and web manifest for PWA support
 
-## Project Structure
-
-```
-PoyshaGuni/
-**Goals.** Create savings goals with a target amount and optional target date, then add funds toward them over time. Goals track a completion percentage and can be marked done.
-
-**Recurring transactions.** Define income or expenses that repeat daily, weekly, monthly, or yearly. Due items are turned into real transactions automatically, both on a nightly schedule and on demand whenever you open a page that reads your totals, so a recurring entry never goes missing from your balance.
-
-**Loans.** Track money you lent out (which others owe you) and money you borrowed (which you owe). Each loan supports partial repayments, a due date, and one-click settlement. Loans are kept separate from your cash balance, but every loan and repayment posts a matching income or expense entry so your cash figure stays accurate. See [How Balances Work](#how-balances-work).
-
-**Analytics.** Spending trends over time, category breakdowns, a spending heatmap, and a forecast based on your recent activity.
-
-**Accounts and profile.** Email and password sign-up with JWT authentication and bcrypt password hashing. Editable profile, avatar, currency, and locale. An audit log records account actions.
-
-**Experience.** Installable as a PWA with offline support, a dark and light theme, multi-currency display with Western digits, and a first-run onboarding flow.
-
-## Tech Stack
-
-**Backend**
-- Node.js and Express
-- MongoDB with Mongoose
-- JSON Web Tokens for authentication
-- bcryptjs for password hashing
-- node-cron for scheduled jobs
-- Nodemailer for email notifications
-- helmet, express-rate-limit, and express-mongo-sanitize for security
-
-**Frontend**
-- Vanilla HTML, CSS, and JavaScript (no framework, no bundler)
-- Chart.js for charts
-- A service worker and web manifest for PWA support
-
-## Project Structure
-
-## Project Structure
-
 ```
 PoyshaGuni/
 ├── backend/
