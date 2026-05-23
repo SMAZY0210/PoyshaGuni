@@ -399,6 +399,30 @@ The response includes the new loan with `outstanding` and `repaidAmount` compute
 }
 ```
 
+### Loan
+```javascript
+{
+  userId, type, // 'expense' or 'income'
+  title, category,        // expense only
+  source,                 // income only
+  amount, frequency,      // daily, weekly, monthly, yearly
+  startDate, endDate, nextDueDate, isActive, lastProcessed,
+  note, createdAt, updatedAt
+}
+```
+
+### Loan
+```javascript
+{
+  userId, direction, // 'lent' or 'borrowed'
+  counterparty, principal, date, dueDate,
+  repayments: [ { amount, date, note } ],
+  status, // 'open' or 'paid'
+  note, createdAt, updatedAt,
+  // virtuals: repaidAmount, outstanding
+}
+```
+
 ### AuditLog
 ```javascript
 {
