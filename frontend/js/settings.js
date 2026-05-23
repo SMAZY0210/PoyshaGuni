@@ -59,7 +59,7 @@ const updateCurrencyPreview = () => {
     const sel = document.getElementById('currencySelect');
     const opt = sel.options[sel.selectedIndex];
     const code = opt.value, symbol = opt.dataset.symbol, locale = opt.dataset.locale;
-    document.getElementById('currencyPreview').textContent = `Preview: ${new Intl.NumberFormat(locale, {style:'currency',currency:code}).format(1234.56)}`;
+    document.getElementById('currencyPreview').textContent = `Preview: ${new Intl.NumberFormat(locale, {style:'currency',currency:code,numberingSystem:'latn'}).format(1234.56)}`;
 };
 
 const setupForms = () => {
@@ -98,7 +98,7 @@ const loadAuditLog = async () => {
                 <div class="audit-action">${ACTION_LABELS[l.action] || l.action}</div>
                 <div class="audit-meta">
                     ${l.detail ? `<span>${l.detail}</span> · ` : ''}
-                    <span>${new Date(l.createdAt).toLocaleString()}</span>
+                    <span>${new Date(l.createdAt).toLocaleString('en-US')}</span>
                 </div>
             </div>`).join('');
     } catch(err) { console.error(err); }

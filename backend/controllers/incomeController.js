@@ -60,7 +60,7 @@ const exportIncomeCSV = async (req, res, next) => {
         if (month && year) filter.date = { $gte: new Date(year, month - 1, 1), $lte: new Date(year, month, 0, 23, 59, 59) };
         const income = await Income.find(filter).sort({ date: -1 });
         const rows = [['Date','Source','Amount','Note']];
-        income.forEach(i => rows.push([new Date(i.date).toLocaleDateString(), `"${i.source}"`, i.amount.toFixed(2), `"${i.note || ''}"`]));
+        income.forEach(i => rows.push([new Date(i.date).toLocaleDateString('en-US'), `"${i.source}"`, i.amount.toFixed(2), `"${i.note || ''}"`]));
         res.setHeader('Content-Type', 'text/csv');
         res.setHeader('Content-Disposition', 'attachment; filename="income.csv"');
         res.send(rows.map(r => r.join(',')).join('\n'));

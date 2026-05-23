@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 // ── Month navigation ──────────────────────────────────────────────
 const setupMonthNav = () => {
     const lbl = document.getElementById('monthLabel');
-    const upd = () => lbl.textContent = new Date(currentYear, currentMonth - 1).toLocaleString('default', { month: 'long', year: 'numeric' });
+    const upd = () => lbl.textContent = new Date(currentYear, currentMonth - 1).toLocaleString('en-US', { month: 'long', year: 'numeric' });
     upd();
     document.getElementById('prevMonth').addEventListener('click', async () => {
         currentMonth--; if (currentMonth < 1) { currentMonth = 12; currentYear--; } upd(); await load();

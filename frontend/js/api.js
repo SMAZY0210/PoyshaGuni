@@ -50,7 +50,8 @@ const formatMoney = (amount) => {
     try {
         return new Intl.NumberFormat(locale, {
             style: 'currency',
-            currency: code
+            currency: code,
+            numberingSystem: 'latn'   // always use Western digits (0-9)
         }).format(amount || 0);
     } catch {
         return `${getCurrency().symbol}${(amount || 0).toFixed(2)}`;

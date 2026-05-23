@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 const setupNav = () => {
     const ml = document.getElementById('monthLabel');
-    const updateLabel = () => { ml.textContent = new Date(currentYear, currentMonth-1).toLocaleString('default',{month:'long',year:'numeric'}); };
+    const updateLabel = () => { ml.textContent = new Date(currentYear, currentMonth-1).toLocaleString('en-US',{month:'long',year:'numeric'}); };
     updateLabel();
     document.getElementById('prevMonth').addEventListener('click', async () => { currentMonth--; if(currentMonth<1){currentMonth=12;currentYear--;} updateLabel(); await loadBudgets(); });
     document.getElementById('nextMonth').addEventListener('click', async () => { currentMonth++; if(currentMonth>12){currentMonth=1;currentYear++;} updateLabel(); await loadBudgets(); });

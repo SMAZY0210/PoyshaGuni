@@ -1,5 +1,7 @@
 const Expense = require('../models/Expense');
 const Income  = require('../models/Income');
+const Loan    = require('../models/Loan');
+const { processDueForUser } = require('../utils/recurringProcessor');
 
 // Helpers
 const monthRange = (year, month) => ({
@@ -27,6 +29,10 @@ const buildMonthWindow = (year, month, n) => {
 const getAnalytics = async (req, res, next) => {
     try {
         const userId = req.user._id;
+
+        // Materialize due recurring items so analytics reflect them too
+        await processDueForUser(userId);
+
         const now    = new Date();
         const tMonth = parseInt(req.query.month) || now.getMonth() + 1;
         const tYear  = parseInt(req.query.year)  || now.getFullYear();
@@ -38,7 +44,18 @@ const getAnalytics = async (req, res, next) => {
         ]);
         const allTimeIncome   = sumBy(allInc);
         const allTimeExpenses = sumBy(allExp);
+        // Net worth = cash only (income − expenses). Loans tracked separately.
         const netWorth        = allTimeIncome - allTimeExpenses;
+
+        // Open loans shown as a separate balance, not mixed into net worth
+        const openLoans = await Loan.find({ userId, status: 'open' }).lean();
+        const owedToMe = openLoans
+            .filter(l => l.direction === 'lent')
+            .reduce((s, l) => s + Math.max(0, l.principal - (l.repayments || []).reduce((a, r) => a + (r.amount || 0), 0)), 0);
+        const iOwe = openLoans
+            .filter(l => l.direction === 'borrowed')
+            .reduce((s, l) => s + Math.max(0, l.principal - (l.repayments || []).reduce((a, r) => a + (r.amount || 0), 0)), 0);
+        const netLoanPosition = owedToMe - iOwe;
 
         // ── 2. Current month data ──────────────────────────────────────
         const { start: cStart, end: cEnd } = monthRange(tYear, tMonth);
@@ -62,7 +79,7 @@ const getAnalytics = async (req, res, next) => {
             const expTotal = sumBy(exp);
             const incTotal = sumBy(inc);
             return {
-                label: new Date(year, month - 1).toLocaleString('default', { month: 'short', year: '2-digit' }),
+                label: new Date(year, month - 1).toLocaleString('en-US', { month: 'short', year: '2-digit' }),
                 month, year,
                 income:   incTotal,
                 expenses: expTotal,
@@ -81,7 +98,7 @@ const getAnalytics = async (req, res, next) => {
         const yoyExpenses = sumBy(pyExp);
         const yoyIncome   = sumBy(pyInc);
         const yoy = {
-            label: new Date(prevYear, tMonth - 1).toLocaleString('default', { month: 'long' }),
+            label: new Date(prevYear, tMonth - 1).toLocaleString('en-US', { month: 'long' }),
             thisYear:  { income: curIncTotal,  expenses: curExpTotal,  savings: curBalance },
             lastYear:  { income: yoyIncome,    expenses: yoyExpenses,  savings: yoyIncome - yoyExpenses },
             expenseDiff: yoyExpenses > 0 ? Math.round(((curExpTotal - yoyExpenses) / yoyExpenses) * 100) : null,
@@ -149,7 +166,7 @@ const getAnalytics = async (req, res, next) => {
 
         // ── 10. Spending heatmap — category × month (last 6 months) ───
         const window6 = window12.slice(6); // last 6 of the 12
-        const heatmapLabels = window6.map(m => new Date(m.year, m.month - 1).toLocaleString('default', { month: 'short' }));
+        const heatmapLabels = window6.map(m => new Date(m.year, m.month - 1).toLocaleString('en-US', { month: 'short' }));
         const heatmap = {};
         for (const cat of CATEGORIES) {
             heatmap[cat] = window6.map(({ year, month }) => {
@@ -172,6 +189,8 @@ const getAnalytics = async (req, res, next) => {
                 period: { month: tMonth, year: tYear },
                 summary: {
                     allTimeIncome, allTimeExpenses, netWorth,
+                    owedToMe, iOwe, netLoanPosition,
+                    openLoanCount: openLoans.length,
                     curIncome: curIncTotal, curExpenses: curExpTotal,
                     curBalance, savingsRate,
                     avgDailySpend, projectedMonthEnd,
@@ -181,7 +200,7 @@ const getAnalytics = async (req, res, next) => {
                 monthlyData,
                 categoryBreakdown,
                 activeCategoryTrends,
-                categoryTrendLabels: window12.map(m => new Date(m.year, m.month - 1).toLocaleString('default', { month: 'short', year: '2-digit' })),
+                categoryTrendLabels: window12.map(m => new Date(m.year, m.month - 1).toLocaleString('en-US', { month: 'short', year: '2-digit' })),
                 dailySpending,
                 topExpenses,
                 incomeSources,

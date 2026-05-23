@@ -4,69 +4,37 @@ const Expense = require('../models/Expense');
 const Income = require('../models/Income');
 const User = require('../models/User');
 const { sendEmail, emailTemplates } = require('./email');
-
-const computeNextDue = (frequency, fromDate) => {
-    const d = new Date(fromDate);
-    switch (frequency) {
-        case 'daily':   d.setDate(d.getDate() + 1); break;
-        case 'weekly':  d.setDate(d.getDate() + 7); break;
-        case 'monthly': d.setMonth(d.getMonth() + 1); break;
-        case 'yearly':  d.setFullYear(d.getFullYear() + 1); break;
-    }
-    return d;
-};
+const { processDueForUser } = require('./recurringProcessor');
 
 // Runs daily at 00:05 — auto-processes due recurring transactions
 const startRecurringCron = () => {
     cron.schedule('5 0 * * *', async () => {
         console.log('[CRON] Processing recurring transactions...');
         try {
+            // Find which users have due items so we only notify those
             const now = new Date();
             const dueItems = await Recurring.find({
                 isActive: true,
                 nextDueDate: { $lte: now },
                 $or: [{ endDate: null }, { endDate: { $gte: now } }]
-            });
+            }).select('userId');
 
-            // Group by user
-            const byUser = {};
-            for (const item of dueItems) {
-                const uid = item.userId.toString();
-                if (!byUser[uid]) byUser[uid] = [];
-                byUser[uid].push(item);
-            }
+            const userIds = [...new Set(dueItems.map(i => i.userId.toString()))];
 
-            for (const [userId, items] of Object.entries(byUser)) {
+            for (const userId of userIds) {
                 const user = await User.findById(userId);
                 if (!user) continue;
 
-                const processed = [];
-                for (const item of items) {
-                    if (item.type === 'expense') {
-                        await Expense.create({
-                            userId, title: item.title, amount: item.amount,
-                            category: item.category || 'Other',
-                            date: item.nextDueDate, note: `[Auto] ${item.note || ''}`
-                        });
-                    } else {
-                        await Income.create({
-                            userId, source: item.source, amount: item.amount,
-                            date: item.nextDueDate, note: `[Auto] ${item.note || ''}`
-                        });
-                    }
-                    item.lastProcessed = item.nextDueDate;
-                    item.nextDueDate = computeNextDue(item.frequency, item.nextDueDate);
-                    if (item.endDate && item.nextDueDate > item.endDate) item.isActive = false;
-                    await item.save();
-                    processed.push(item);
-                }
+                // Use the shared processor so cron and on-demand behave identically
+                const created = await processDueForUser(userId, '[Auto]');
 
-                if (processed.length > 0) {
+                if (created.length > 0) {
+                    const processed = created.map(c => c.data);
                     const { subject, html } = emailTemplates.recurringDue(user.name, processed);
                     await sendEmail({ to: user.email, subject, html });
                 }
             }
-            console.log(`[CRON] Processed recurring for ${Object.keys(byUser).length} user(s)`);
+            console.log(`[CRON] Processed recurring for ${userIds.length} user(s)`);
         } catch (err) {
             console.error('[CRON] Recurring error:', err.message);
         }

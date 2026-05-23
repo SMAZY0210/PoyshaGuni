@@ -1358,6 +1358,9 @@ footer p { color: var(--text-3); font-size: 13px; }
   .app-logo { font-size: 16px; }
   .app-main { padding: 16px 16px 24px; }
   .stats-grid { grid-template-columns: 1fr 1fr !important; gap: 10px; }
+  .loan-strip { grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+  .loan-strip-card.net { grid-column: 1 / -1; }
+  .loan-strip-value { font-size: 18px; }
   .stat-value { font-size: 20px; }
   .charts-row { grid-template-columns: 1fr; gap: 12px; }
   .chart-container { height: 180px; }
@@ -1375,7 +1378,7 @@ footer p { color: var(--text-3); font-size: 13px; }
   .rec-layout { grid-template-columns: 1fr; }
   .rec-sidebar { order: -1; }
   .budget-grid, .goals-grid { grid-template-columns: 1fr; }
-  .txn-totals { grid-template-columns: 1fr; }
+  .txn-totals { grid-template-columns: 1fr 1fr; gap: 10px; }
   .form-row.two-col { flex-direction: column; }
   .auth-container { grid-template-columns: 1fr; }
   .auth-left { display: none; }
@@ -1485,3 +1488,72 @@ svg { display:inline-block; vertical-align:middle; flex-shrink:0; }
 /* Field icons */
 .field-icon { display:flex; align-items:center; color:var(--text-3); }
 .field-input:focus ~ .field-icon, .field-wrap:focus-within .field-icon { color:var(--emerald); }
+
+/* ── Loans: dashboard summary strip ──────────────────────────────── */
+.loan-strip {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 28px;
+}
+.loan-strip-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px 18px;
+  text-decoration: none;
+  transition: transform .15s ease, border-color .15s ease;
+  display: block;
+}
+.loan-strip-card:hover { transform: translateY(-2px); border-color: var(--border-2); }
+.loan-strip-card.lent     { border-left: 3px solid var(--success); }
+.loan-strip-card.borrowed { border-left: 3px solid var(--danger); }
+.loan-strip-card.net      { border-left: 3px solid var(--emerald); }
+.loan-strip-label { font-size: 12px; color: var(--text-2); font-weight: 600; text-transform: uppercase; letter-spacing: .03em; }
+.loan-strip-value { font-size: 22px; font-weight: 700; color: var(--text); margin: 6px 0 2px; }
+.loan-strip-sub   { font-size: 12px; color: var(--text-2); }
+
+/* ── Loans: list progress bars ───────────────────────────────────── */
+.loan-progress { margin-top: 8px; }
+.loan-progress-bar {
+  height: 5px;
+  background: var(--surface-2);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 4px;
+}
+.loan-progress-fill { height: 100%; border-radius: 4px; transition: width .3s ease; }
+.loan-progress-text { font-size: 11.5px; color: var(--text-2); }
+
+/* ── Loans: modal field labels & repay context ───────────────────── */
+.field-label {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-2);
+  margin: 12px 0 5px;
+}
+.field-label:first-of-type { margin-top: 0; }
+.repay-context {
+  font-size: 13px;
+  color: var(--text-2);
+  background: var(--surface-2);
+  border-radius: 10px;
+  padding: 10px 12px;
+  margin-bottom: 4px;
+  line-height: 1.45;
+}
+
+/* Reuse income/expense colour accents on loan rows */
+.rec-amount.income { color: var(--success); }
+.rec-amount.expense { color: var(--danger); }
+.rec-icon.income { background: rgba(16,185,129,0.12); color: var(--success); }
+.rec-icon.expense { background: rgba(239,68,68,0.12); color: var(--danger); }
+
+@media (max-width: 640px) {
+  .loan-strip { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .loan-strip-card.net { grid-column: 1 / -1; }
+  .loan-strip-value { font-size: 17px; }
+  .loan-strip-label { font-size: 11px; }
+  .loan-strip-sub { font-size: 11px; }
+}

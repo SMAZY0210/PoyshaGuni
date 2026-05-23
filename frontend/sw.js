@@ -1,11 +1,11 @@
-const CACHE_NAME = 'poyshaguni-v2';
+const CACHE_NAME = 'poyshaguni-v5';
 const STATIC_ASSETS = [
     '/', '/dashboard.html', '/transactions.html', '/budgets.html',
-    '/goals.html', '/recurring.html', '/profile.html', '/settings.html',
+    '/goals.html', '/recurring.html', '/loans.html', '/profile.html', '/settings.html',
     '/style/main.css', '/style/profile.css',
     '/js/api.js', '/js/theme.js', '/js/auth.js', '/js/dashboard.js',
     '/js/transactions.js', '/js/budgets.js', '/js/goals.js',
-    '/js/recurring.js', '/js/settings.js', '/js/profile.js'
+    '/js/recurring.js', '/js/loans.js', '/js/settings.js', '/js/profile.js'
 ];
 
 self.addEventListener('install', (e) => {

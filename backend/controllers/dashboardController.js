@@ -1,5 +1,7 @@
 const Expense = require('../models/Expense');
 const Income = require('../models/Income');
+const Loan = require('../models/Loan');
+const { processDueForUser } = require('../utils/recurringProcessor');
 
 // @desc    Get dashboard summary
 // @route   GET /api/dashboard
@@ -8,6 +10,11 @@ const getDashboard = async (req, res, next) => {
     try {
         const userId = req.user._id;
         const { month, year } = req.query;
+
+        // Materialize any due recurring items first so totals always reflect
+        // every transaction that has already come due (fixes the issue where
+        // recurring income/expense never showed up on the dashboard).
+        await processDueForUser(userId);
 
         const now = new Date();
         const targetMonth = month ? parseInt(month) : now.getMonth() + 1;
@@ -22,7 +29,20 @@ const getDashboard = async (req, res, next) => {
         const allIncome = await Income.find({ userId });
         const totalIncome = allIncome.reduce((s, i) => s + i.amount, 0);
         const totalExpenses = allExpenses.reduce((s, e) => s + e.amount, 0);
+        // Net balance = cash on hand only (income − expenses). Loans are
+        // tracked separately and intentionally NOT mixed into this number.
         const balance = totalIncome - totalExpenses;
+
+        // Open loans → shown as a separate balance alongside cash.
+        // Money I lent out (others owe me) and money I borrowed (I owe).
+        const openLoans = await Loan.find({ userId, status: 'open' });
+        const owedToMe = openLoans
+            .filter(l => l.direction === 'lent')
+            .reduce((s, l) => s + l.outstanding, 0);
+        const iOwe = openLoans
+            .filter(l => l.direction === 'borrowed')
+            .reduce((s, l) => s + l.outstanding, 0);
+        const netLoanPosition = owedToMe - iOwe;
 
         // Monthly income & expenses
         const monthlyExpenses = await Expense.find({ userId, date: dateFilter });
@@ -47,7 +67,7 @@ const getDashboard = async (req, res, next) => {
             const mInc = await Income.find({ userId, date: { $gte: mStart, $lte: mEnd } });
 
             monthlySummary.push({
-                month: d.toLocaleString('default', { month: 'short' }),
+                month: d.toLocaleString('en-US', { month: 'short' }),
                 year: d.getFullYear(),
                 income: mInc.reduce((s, i) => s + i.amount, 0),
                 expenses: mExp.reduce((s, e) => s + e.amount, 0)
@@ -61,7 +81,16 @@ const getDashboard = async (req, res, next) => {
         res.json({
             success: true,
             data: {
-                summary: { totalIncome, totalExpenses, balance },
+                summary: {
+                    totalIncome,
+                    totalExpenses,
+                    balance,          // cash on hand (income − expenses)
+                    cashBalance: balance,
+                    owedToMe,         // separate loan balances, not mixed in
+                    iOwe,
+                    netLoanPosition,
+                    openLoanCount: openLoans.length
+                },
                 monthly: {
                     month: targetMonth,
                     year: targetYear,
