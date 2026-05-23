@@ -1,5 +1,7 @@
 const Expense = require('../models/Expense');
 const Income  = require('../models/Income');
+const Loan    = require('../models/Loan');
+const { processDueForUser } = require('../utils/recurringProcessor');
 
 // Helpers
 const monthRange = (year, month) => ({
@@ -27,6 +29,10 @@ const buildMonthWindow = (year, month, n) => {
 const getAnalytics = async (req, res, next) => {
     try {
         const userId = req.user._id;
+
+        // Materialize due recurring items so analytics reflect them too
+        await processDueForUser(userId);
+
         const now    = new Date();
         const tMonth = parseInt(req.query.month) || now.getMonth() + 1;
         const tYear  = parseInt(req.query.year)  || now.getFullYear();
@@ -38,7 +44,18 @@ const getAnalytics = async (req, res, next) => {
         ]);
         const allTimeIncome   = sumBy(allInc);
         const allTimeExpenses = sumBy(allExp);
+        // Net worth = cash only (income − expenses). Loans tracked separately.
         const netWorth        = allTimeIncome - allTimeExpenses;
+
+        // Open loans shown as a separate balance, not mixed into net worth
+        const openLoans = await Loan.find({ userId, status: 'open' }).lean();
+        const owedToMe = openLoans
+            .filter(l => l.direction === 'lent')
+            .reduce((s, l) => s + Math.max(0, l.principal - (l.repayments || []).reduce((a, r) => a + (r.amount || 0), 0)), 0);
+        const iOwe = openLoans
+            .filter(l => l.direction === 'borrowed')
+            .reduce((s, l) => s + Math.max(0, l.principal - (l.repayments || []).reduce((a, r) => a + (r.amount || 0), 0)), 0);
+        const netLoanPosition = owedToMe - iOwe;
 
         // ── 2. Current month data ──────────────────────────────────────
         const { start: cStart, end: cEnd } = monthRange(tYear, tMonth);
@@ -172,6 +189,8 @@ const getAnalytics = async (req, res, next) => {
                 period: { month: tMonth, year: tYear },
                 summary: {
                     allTimeIncome, allTimeExpenses, netWorth,
+                    owedToMe, iOwe, netLoanPosition,
+                    openLoanCount: openLoans.length,
                     curIncome: curIncTotal, curExpenses: curExpTotal,
                     curBalance, savingsRate,
                     avgDailySpend, projectedMonthEnd,

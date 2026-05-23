@@ -33,6 +33,7 @@ app.use('/api/expenses',  require('./routes/expenses'));
 app.use('/api/income',    require('./routes/income'));
 app.use('/api/dashboard', require('./routes/dashboard'));
 app.use('/api/recurring', require('./routes/recurring'));
+app.use('/api/loans',     require('./routes/loans'));
 app.use('/api/user',      require('./routes/user'));
 app.use('/api/analytics', require('./routes/analytics'));
 app.use('/api/budgets',   require('./routes/budgets'));

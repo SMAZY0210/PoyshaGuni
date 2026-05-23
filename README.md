@@ -1,8 +1,8 @@
 # PoyshaGuni — Personal Finance Management App
 
-A comprehensive full-stack finance tracker with **budgeting**, **goal tracking**, **recurring transactions**, **analytics**, and **audit logging**. Built with **Node.js + Express + MongoDB** (backend) and **Vanilla HTML/CSS/JS + PWA** (frontend).
+A comprehensive full-stack finance tracker with **budgeting**, **goal tracking**, **recurring transactions**, **loan tracking**, **analytics**, and **audit logging**. Built with **Node.js + Express + MongoDB** (backend) and **Vanilla HTML/CSS/JS + PWA** (frontend).
 
-**Features:** Track expenses & income • Manage budgets by category • Set and track financial goals • Automate recurring transactions • View spending analytics • 24/7 recurring processing • Email alerts • Progressive Web App • Dark/Light themes • Multi-language support
+**Features:** Track expenses & income • Manage budgets by category • Set and track financial goals • Automate recurring transactions • Track loans you lent out and money you owe • View spending analytics • 24/7 recurring processing • Email alerts • Progressive Web App • Dark/Light themes • Multi-language support
 
 ---
 
@@ -21,6 +21,7 @@ poyshaguni/
 │   │   ├── Budget.js              # Category budgets with tracking
 │   │   ├── Goal.js                # Financial goals with progress
 │   │   ├── Recurring.js           # Automated recurring transactions
+│   │   ├── Loan.js                # Loans lent out / borrowed, with repayments
 │   │   └── AuditLog.js            # Action audit trail
 │   ├── controllers/
 │   │   ├── authController.js      # Sign up, login, user profile
@@ -29,6 +30,7 @@ poyshaguni/
 │   │   ├── budgetController.js    # Budget CRUD & tracking
 │   │   ├── goalController.js      # Goal CRUD & fund management
 │   │   ├── recurringController.js # Recurring CRUD & processing
+│   │   ├── loanController.js      # Loan CRUD, repayments & settlement
 │   │   ├── analyticsController.js # Trends, forecasts, breakdowns
 │   │   ├── dashboardController.js # Summary data & charts
 │   │   ├── auditController.js     # Audit log retrieval
@@ -40,6 +42,7 @@ poyshaguni/
 │   │   ├── budgets.js             # /api/budgets/*
 │   │   ├── goals.js               # /api/goals/*
 │   │   ├── recurring.js           # /api/recurring/*
+│   │   ├── loans.js               # /api/loans/*
 │   │   ├── analytics.js           # /api/analytics/*
 │   │   ├── dashboard.js           # /api/dashboard
 │   │   ├── audit.js               # /api/audit/*
@@ -51,6 +54,7 @@ poyshaguni/
 │   └── utils/
 │       ├── generateToken.js       # JWT token generation
 │       ├── auditLog.js            # Audit trail logging
+│       ├── recurringProcessor.js  # Shared on-demand recurring materializer
 │       ├── cron.js                # Scheduled jobs (recurring processing, summaries)
 │       └── email.js               # Email notifications (alerts, welcome, reminders)
 │
@@ -64,6 +68,7 @@ poyshaguni/
     ├── budgets.html               # Budget management by category
     ├── goals.html                 # Financial goals with progress tracking
     ├── recurring.html             # Recurring transaction automation
+    ├── loans.html                 # Loan tracking (lent out / borrowed)
     ├── analytics.html             # Trends, forecasts, category breakdown
     ├── profile.html               # User profile & preferences
     ├── settings.html              # App settings (theme, currency, language)
@@ -86,6 +91,7 @@ poyshaguni/
     │   ├── budgets.js             # Budgets page logic
     │   ├── goals.js               # Goals page logic
     │   ├── recurring.js           # Recurring transactions page logic
+    │   ├── loans.js               # Loans page logic
     │   ├── analytics.js           # Analytics page logic
     │   ├── profile.js             # Profile page logic
     │   ├── settings.js            # Settings page logic
@@ -290,10 +296,29 @@ const API_BASE = 'http://localhost:5000/api';
 | PUT | `/api/recurring/:id` | Yes | `{amount, frequency, endDate, ...}` | Update recurring |
 | PATCH | `/api/recurring/:id/toggle` | Yes | — | Pause/resume recurring |
 | DELETE | `/api/recurring/:id` | Yes | — | Delete recurring |
-| POST | `/api/recurring/process-all` | Yes | — | Process all due items (admin) |
+| POST | `/api/recurring/process` | Yes | — | Process this user's due items now |
+| POST | `/api/recurring/process-all` | Yes | — | Alias of `/process` (processes due items) |
 
 **Frequency options:** `daily`, `weekly`, `monthly`, `yearly`  
 **Type options:** `expense`, `income`
+
+> **Note:** Due recurring items are also materialized automatically whenever the dashboard, transactions, or analytics endpoints are called, so recurring income/expense always shows up in your totals without waiting for the nightly cron.
+
+### Loans
+
+| Method | Endpoint | Auth | Body / Query | Description |
+|--------|----------|------|--------------|-------------|
+| GET | `/api/loans` | Yes | `?direction=lent\|borrowed&status=open\|paid` | List loans + summary totals |
+| GET | `/api/loans/summary` | Yes | — | Outstanding totals only (owedToMe, iOwe, net) |
+| POST | `/api/loans` | Yes | `{direction, counterparty, principal, date?, dueDate?, note?}` | Add a loan |
+| PUT | `/api/loans/:id` | Yes | `{counterparty?, principal?, dueDate?, ...}` | Update a loan |
+| POST | `/api/loans/:id/repay` | Yes | `{amount, date?, note?}` | Record a (partial) repayment |
+| PATCH | `/api/loans/:id/settle` | Yes | — | Mark the loan fully settled |
+| DELETE | `/api/loans/:id` | Yes | — | Delete a loan |
+
+**Direction options:** `lent` (someone owes you — an asset), `borrowed` (you owe — a liability)
+
+> **How loans affect your money:** Loans are tracked **separately** from your net balance, which stays cash-only (income − expenses). To keep cash accurate, each loan also posts a matching transaction: lending money creates an **expense** (cash leaves you) and borrowing creates **income** (cash arrives); every repayment posts the reverse (collecting on a loan → income, repaying a debt → expense). The dashboard and transactions pages show *Owed To You*, *You Owe*, and *Net Loan Position* alongside your balance.
 
 ### Analytics
 
@@ -483,6 +508,44 @@ Content-Type: application/json
 }
 ```
 
+### POST /api/loans
+```json
+// Request — lending money to a friend
+POST http://localhost:5000/api/loans
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+Content-Type: application/json
+
+{
+  "direction": "lent",
+  "counterparty": "Rahim",
+  "principal": 1000.00,
+  "date": "2026-05-01",
+  "dueDate": "2026-08-01",
+  "note": "Emergency loan"
+}
+
+// Response 201 Created
+{
+  "success": true,
+  "message": "Loan added.",
+  "data": {
+    "_id": "66xyz789abc012def345",
+    "userId": "66abc123def456789ghi",
+    "direction": "lent",
+    "counterparty": "Rahim",
+    "principal": 1000.00,
+    "date": "2026-05-01T00:00:00.000Z",
+    "dueDate": "2026-08-01T00:00:00.000Z",
+    "repayments": [],
+    "status": "open",
+    "note": "Emergency loan",
+    "repaidAmount": 0,
+    "outstanding": 1000.00
+  }
+}
+// A matching expense of 1000 is also created automatically (cash left you).
+```
+
 ---
 
 ## Data Models
@@ -585,6 +648,29 @@ Content-Type: application/json
 }
 ```
 
+### Loan
+```javascript
+{
+  _id: ObjectId,
+  userId: ObjectId (ref: User),
+  direction: String (enum: 'lent', 'borrowed'),
+  counterparty: String,          // the other party (person / bank)
+  principal: Number,             // original loan amount
+  date: Date,                    // when the loan was made
+  dueDate: Date (optional),      // expected settlement date
+  repayments: [                  // partial repayments recorded over time
+    { amount: Number, date: Date, note: String }
+  ],
+  status: String (enum: 'open', 'paid'),
+  note: String (optional),
+  createdAt: Date,
+  updatedAt: Date,
+  // Virtuals (included in JSON):
+  //   repaidAmount  = sum of repayments
+  //   outstanding   = max(0, principal − repaidAmount)
+}
+```
+
 ### AuditLog
 ```javascript
 {
@@ -616,8 +702,17 @@ Content-Type: application/json
 ### Automation
 ✅ **Recurring Transactions** — Set expenses/income to auto-process (daily/weekly/monthly/yearly)  
 ✅ **24/7 Processing** — Node-cron runs recurring items at scheduled times  
+✅ **On-Demand Catch-Up** — Due items are also materialized when you open the dashboard/analytics, so totals are never stale  
 ✅ **Upcoming View** — See what's due in the next 30 days  
 ✅ **Pause/Resume** — Easily toggle recurring items on/off  
+
+### Loan Tracking
+✅ **Lent & Borrowed** — Track money you lent out (owed to you) and money you borrowed (you owe)  
+✅ **Partial Repayments** — Record repayments over time with a live outstanding balance  
+✅ **One-Click Settle** — Mark a loan fully paid in a single tap  
+✅ **Separate Balance** — Loans shown apart from cash; Owed/You-Owe/Net surfaced on the dashboard & transactions  
+✅ **Auto Cash Sync** — Loan creation and each repayment post a matching income/expense so your cash stays accurate  
+✅ **Due Reminders** — Overdue and upcoming loans highlighted  
 
 ### Analytics & Insights
 ✅ **Spending Trends** — View spending over time by category  
@@ -702,6 +797,17 @@ CMD ["npm", "start"]
 
 ---
 
+## Changelog
+
+### v2.1 — Loans & connected balances
+- **New: Loan tracking.** Track money lent out (owed to you) and borrowed (you owe), with partial repayments, due dates, and one-click settle. New `loans.html` page plus dashboard and transactions integration.
+- **Loans kept separate from net balance.** Net balance stays cash-only (income − expenses); loans surface as their own *Owed To You*, *You Owe*, and *Net Loan Position* figures.
+- **Automatic cash sync.** Creating a loan and recording each repayment posts a matching income/expense entry, so your cash balance stays accurate.
+- **Fixed: recurring items now always show up.** Due recurring income/expense is materialized on demand whenever the dashboard, analytics, or transactions endpoints load — no longer waiting on the nightly cron. A shared `recurringProcessor` utility powers the cron, the manual endpoint, and on-demand processing identically.
+- **Fixed: `/api/recurring/process-all`** (called by the UI) now exists as an alias of `/process`.
+
+---
+
 ## License
 
 MIT — Feel free to use and modify this project.
@@ -722,6 +828,8 @@ MIT — Feel free to use and modify this project.
 - ✅ Last 6 months chart data
 - ✅ Category spending breakdown
 - ✅ CRUD for expenses and income
+- ✅ Loan tracking (lent / borrowed) with partial repayments
+- ✅ Recurring transactions with on-demand + cron processing
 - ✅ Category filtering
 - ✅ Monthly filtering
 - ✅ Input validation (express-validator)

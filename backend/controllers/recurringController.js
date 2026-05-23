@@ -1,18 +1,5 @@
 const Recurring = require('../models/Recurring');
-const Expense = require('../models/Expense');
-const Income = require('../models/Income');
-
-// Helper: compute next due date
-const computeNextDue = (frequency, fromDate) => {
-    const d = new Date(fromDate);
-    switch (frequency) {
-        case 'daily':   d.setDate(d.getDate() + 1); break;
-        case 'weekly':  d.setDate(d.getDate() + 7); break;
-        case 'monthly': d.setMonth(d.getMonth() + 1); break;
-        case 'yearly':  d.setFullYear(d.getFullYear() + 1); break;
-    }
-    return d;
-};
+const { processDueForUser, computeNextDue } = require('../utils/recurringProcessor');
 
 // @desc    Get all recurring transactions
 // @route   GET /api/recurring
@@ -117,53 +104,7 @@ const deleteRecurring = async (req, res, next) => {
 // @access  Private
 const processRecurring = async (req, res, next) => {
     try {
-        const now = new Date();
-        const userId = req.user._id;
-
-        const dueitems = await Recurring.find({
-            userId,
-            isActive: true,
-            nextDueDate: { $lte: now },
-            $or: [{ endDate: null }, { endDate: { $gte: now } }]
-        });
-
-        const created = [];
-
-        for (const item of dueitems) {
-            // Create actual transaction
-            if (item.type === 'expense') {
-                const exp = await Expense.create({
-                    userId,
-                    title: item.title,
-                    amount: item.amount,
-                    category: item.category || 'Other',
-                    date: item.nextDueDate,
-                    note: item.note ? `[Recurring] ${item.note}` : '[Recurring]'
-                });
-                created.push({ type: 'expense', data: exp });
-            } else {
-                const inc = await Income.create({
-                    userId,
-                    source: item.source,
-                    amount: item.amount,
-                    date: item.nextDueDate,
-                    note: item.note ? `[Recurring] ${item.note}` : '[Recurring]'
-                });
-                created.push({ type: 'income', data: inc });
-            }
-
-            // Advance nextDueDate
-            item.lastProcessed = item.nextDueDate;
-            item.nextDueDate = computeNextDue(item.frequency, item.nextDueDate);
-
-            // Deactivate if past end date
-            if (item.endDate && item.nextDueDate > item.endDate) {
-                item.isActive = false;
-            }
-
-            await item.save();
-        }
-
+        const created = await processDueForUser(req.user._id);
         res.json({
             success: true,
             message: `Processed ${created.length} recurring transaction(s).`,
@@ -196,4 +137,4 @@ const getUpcoming = async (req, res, next) => {
     }
 };
 
-module.exports = { getRecurring, addRecurring, updateRecurring, toggleRecurring, deleteRecurring, processRecurring, getUpcoming };
+module.exports = { getRecurring, addRecurring, updateRecurring, toggleRecurring, deleteRecurring, processRecurring, processAllRecurring: processRecurring, getUpcoming };

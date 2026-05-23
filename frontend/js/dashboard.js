@@ -61,9 +61,12 @@ const loadDashboard = async () => {
         document.getElementById('totalExpenses').textContent = formatMoney(summary.totalExpenses);
         document.getElementById('monthlyBalance').textContent = formatMoney(monthly.balance);
 
-        // Balance color
+        // Balance color (net wealth, incl. loans)
         const balEl = document.getElementById('totalBalance');
         balEl.style.color = summary.balance >= 0 ? '#10b981' : '#ef4444';
+
+        // Loan breakdown (only render if those elements exist on the page)
+        renderLoanSummary(summary);
 
         // Charts
         renderBarChart(monthlySummary);
@@ -76,6 +79,33 @@ const loadDashboard = async () => {
     } catch (err) {
         showToast('Failed to load dashboard: ' + err.message, 'error');
         showSkeleton(false);
+    }
+};
+
+// Render the loan portion of the dashboard summary
+const renderLoanSummary = (summary) => {
+    const owedEl = document.getElementById('owedToMe');
+    if (owedEl) owedEl.textContent = formatMoney(summary.owedToMe || 0);
+
+    const oweEl = document.getElementById('iOwe');
+    if (oweEl) oweEl.textContent = formatMoney(summary.iOwe || 0);
+
+    const netEl = document.getElementById('netLoanPosition');
+    if (netEl) {
+        const net = summary.netLoanPosition || 0;
+        netEl.textContent = formatMoney(net);
+        netEl.style.color = net >= 0 ? '#10b981' : '#ef4444';
+    }
+
+    // Sub-text under the balance card — loans are separate, so just hint at them
+    const note = document.getElementById('balanceLoanNote');
+    if (note) {
+        if (summary.openLoanCount > 0) {
+            note.textContent = `${summary.openLoanCount} open loan${summary.openLoanCount > 1 ? 's' : ''} tracked separately`;
+            note.style.display = 'block';
+        } else {
+            note.style.display = 'none';
+        }
     }
 };
 
