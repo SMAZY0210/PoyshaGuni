@@ -75,7 +75,7 @@ const exportExpensesCSV = async (req, res, next) => {
 
         const rows = [['Date','Title','Category','Amount','Note']];
         expenses.forEach(e => rows.push([
-            new Date(e.date).toLocaleDateString(),
+            new Date(e.date).toLocaleDateString('en-US'),
             `"${e.title}"`, e.category, e.amount.toFixed(2), `"${e.note || ''}"`
         ]));
 

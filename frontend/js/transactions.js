@@ -94,13 +94,15 @@ const loadAll = async () => {
             query = `?month=${month}&year=${year}`;
         }
 
-        const [expRes, incRes] = await Promise.all([
+        const [expRes, incRes, loanRes] = await Promise.all([
             apiFetch(`/expenses${query}`),
-            apiFetch(`/income${query}`)
+            apiFetch(`/income${query}`),
+            apiFetch('/loans/summary').catch(() => null)
         ]);
 
         allExpenses = Array.isArray(expRes?.data) ? expRes.data : [];
         allIncome = Array.isArray(incRes?.data) ? incRes.data : [];
+        window._loanSummary = loanRes?.data || null;
         renderList();
         updateTotals();
     } catch (err) {
@@ -121,6 +123,13 @@ const updateTotals = () => {
     const incEl = document.getElementById('tabTotalIncome');
     if (expEl) expEl.textContent = formatMoney(totalExp);
     if (incEl) incEl.textContent = formatMoney(totalInc);
+
+    // Loan figures (tracked separately from income/expenses)
+    const ls = window._loanSummary;
+    const owedEl = document.getElementById('tabOwedToMe');
+    const oweEl = document.getElementById('tabIOwe');
+    if (owedEl) owedEl.textContent = formatMoney(ls?.owedToMe || 0);
+    if (oweEl) oweEl.textContent = formatMoney(ls?.iOwe || 0);
 };
 
 // ── Render list ───────────────────────────────────────────────────
