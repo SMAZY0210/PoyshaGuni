@@ -95,23 +95,13 @@ PoyshaGuni/
 
 ## Project Structure
 
+## Project Structure
+
 ```
 PoyshaGuni/
 ├── backend/
 │   ├── config/
 │   │   └── db.js                  # MongoDB connection
-│   ├── controllers/               # Request handlers (one per resource)
-│   │   ├── authController.js
-│   │   ├── expenseController.js
-│   │   ├── incomeController.js
-│   │   ├── dashboardController.js
-│   │   ├── budgetController.js
-│   │   ├── goalController.js
-│   │   ├── recurringController.js
-│   │   ├── loanController.js
-│   │   ├── analyticsController.js
-│   │   ├── userController.js
-│   │   └── auditController.js
 │   ├── controllers/               # Request handlers (one per resource)
 │   │   ├── authController.js
 │   │   ├── expenseController.js
